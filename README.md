@@ -1,4 +1,4 @@
-# 内网IP存活性探测
+# 内网IP存活性探测简易工具 
 
 ## 使用方法
 ```
@@ -14,3 +14,6 @@ ipscan 192.168.0.1/24
 
 [phil-fly](https://github.com/phil-fly/go-ipscan)  
 [cidr](https://github.com/lflxp/cidr/blob/master/cidr.go)
+
+
+## 欢迎提BUG
