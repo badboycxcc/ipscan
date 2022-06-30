@@ -13,3 +13,4 @@ ipscan 192.168.0.1/24
 ## 参考项目
 
 [phil-fly](https://github.com/phil-fly/go-ipscan)
+[cidr](https://github.com/lflxp/cidr/blob/master/cidr.go)
