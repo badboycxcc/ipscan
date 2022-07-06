@@ -38,7 +38,7 @@ func main() {
 	} else {
 		fmt.Println("使用方法：\n")
 		fmt.Println("scan -h 192.168.0.1/24 -t 10")
-		fmt.Println("scan -h 192.168.0.1-192.168.1.1-192.168.1.254 -t 10")
+		fmt.Println("scan -h 192.168.0.1-192.168.0.254 -t 10")
 		fmt.Println("默认线程数：10，最大线程数：1000")
 	}
 }
