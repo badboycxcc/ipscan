@@ -25,12 +25,16 @@ func (this *Cidr) GetCidrIpRange() *Cidr {
 	ip := strings.Split(this.CidrIpRange, "/")[0]
 	ipSegs := strings.Split(ip, ".")
 	maskLen := this.GetMaskLen()
+	seg2MinIp, seg2MaxIp := this.GetIpSeg2Range(ipSegs, maskLen)
 	seg3MinIp, seg3MaxIp := this.GetIpSeg3Range(ipSegs, maskLen)
 	seg4MinIp, seg4MaxIp := this.GetIpSeg4Range(ipSegs, maskLen)
-	ipPrefix := ipSegs[0] + "." + ipSegs[1] + "."
+	//ipPrefix := ipSegs[0] + "." + ipSegs[1] + "."
+	ipPrefix := ipSegs[0] + "."
 
-	this.Min = ipPrefix + strconv.Itoa(seg3MinIp) + "." + strconv.Itoa(seg4MinIp)
-	this.Max = ipPrefix + strconv.Itoa(seg3MaxIp) + "." + strconv.Itoa(seg4MaxIp)
+	//this.Min = ipPrefix + strconv.Itoa(seg3MinIp) + "." + strconv.Itoa(seg4MinIp)
+	this.Min = ipPrefix + strconv.Itoa(seg2MinIp) + "." +strconv.Itoa(seg3MinIp) + "." + strconv.Itoa(seg4MinIp)
+	//this.Max = ipPrefix + strconv.Itoa(seg3MaxIp) + "." + strconv.Itoa(seg4MaxIp)
+	this.Max = ipPrefix + strconv.Itoa(seg2MaxIp) + "." + strconv.Itoa(seg3MaxIp) + "." + strconv.Itoa(seg4MaxIp)
 	return this
 }
 
@@ -66,9 +70,20 @@ func (this *Cidr) GetCidrIpMask() *Cidr {
 	return this
 }
 
+//得到第二段IP的区间（第一片段.第二片段.第三片段.第四片段）
+func (this *Cidr) GetIpSeg2Range(ipSegs []string, maskLen int) (int, int) {
+	if maskLen > 8 {
+		segIp, _ := strconv.Atoi(ipSegs[1])
+		return segIp, segIp
+	}
+	ipSeg, _ := strconv.Atoi(ipSegs[1])
+	return this.GetIpSegRange(uint8(ipSeg), uint8(24 - maskLen))
+}
+
+
 //得到第三段IP的区间（第一片段.第二片段.第三片段.第四片段）
 func (this *Cidr) GetIpSeg3Range(ipSegs []string, maskLen int) (int, int) {
-	if maskLen > 24 {
+	if maskLen > 16 {
 		segIp, _ := strconv.Atoi(ipSegs[2])
 		return segIp, segIp
 	}
@@ -83,6 +98,7 @@ func (this *Cidr) GetIpSeg4Range(ipSegs []string, maskLen int) (int, int) {
 	return segMinIp + 1, segMaxIp
 }
 
+
 //根据用户输入的基础IP地址和CIDR掩码计算一个IP片段的区间
 func (this *Cidr) GetIpSegRange(userSegIp, offset uint8) (int, int) {
 	var ipSegMax uint8 = 255
@@ -91,3 +107,7 @@ func (this *Cidr) GetIpSegRange(userSegIp, offset uint8) (int, int) {
 	segMaxIp := userSegIp & (255 << offset) | ^(255 << offset)
 	return int(segMinIp), int(segMaxIp)
 }
+
+
+
+
