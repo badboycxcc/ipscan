@@ -7,9 +7,8 @@ scan -h 192.168.0.1/24
 scan -h 192.168.0.1/24 -t 100
 scan -h 192.168.0.1-192.168.0.255 -t 100
 ```
+![image](https://user-images.githubusercontent.com/72059221/177450567-ab9175fa-cb82-4ce9-bf3c-5b5b13f65865.png)
 
-
-![PB 6QVC2JJ48G{WA1~NUK B](https://user-images.githubusercontent.com/72059221/177449067-b564cbec-5234-43f0-90a2-9118991d445c.png)
 
 ## 参考项目
 
