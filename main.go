@@ -3,30 +3,42 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"go-ipscan/tools"
-	"os"
+	"strings"
 )
 
 func main() {
 	fmt.Println("内网主机存活探测工具\n")
 	fmt.Println("by  cxaqhq\n")
+	// ip地址
 	var result string
-	for k, v := range os.Args {
-		if k == 1 {
-			result = v
-		}
-	}
+	// 线程数
+	var tasknum int
+
+	flag.StringVar(&result, "h", "", "主机名,例如：192.168.0.1/24  或者 192.168.1.1-192.168.1.254")
+	flag.IntVar(&tasknum, "t", 10, "线程数")
+
+	flag.Parse()
+
 	if result != "" {
 		ip := result
 		fmt.Println("扫描IP段：", ip)
+		if strings.Contains(ip, "-") == true {
+			allip := tools.ParseIP1(ip)
+			tools.Task(allip, tasknum)
+		} else {
+			iplist := tools.NewCidr(ip).GetCidrIpRange()
+			allip := tools.ParseIP1(iplist.Min+ "-" + iplist.Max)
+			// 输出全部ip
+			tools.Task(allip, tasknum)
+		}
 
-		iplist := tools.NewCidr(ip).GetCidrIpRange()
-		fmt.Println("起始IP",iplist.Min)
-		fmt.Println("结束IP",iplist.Max)
-		allip := tools.ParseIP1(iplist.Min+ "-" + iplist.Max)
-		tools.Task(allip)
 	} else {
-		fmt.Println("使用方法：scan 192.168.0.1/24")
+		fmt.Println("使用方法：\n")
+		fmt.Println("scan -h 192.168.0.1/24 -t 10")
+		fmt.Println("scan -h 192.168.0.1-192.168.1.1-192.168.1.254 -t 10")
+		fmt.Println("默认线程数：10，最大线程数：1000")
 	}
 }
